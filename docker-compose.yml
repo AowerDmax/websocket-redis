@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: websocket_redis
+    ports:
+      - "${GO_APP_PORT}:${GO_APP_PORT}"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - meilisearch
+      - redis
+    env_file:
+      - .env
+    environment:
+      MEILISEARCH_HOST: "meilisearch"
+      REDIS_HOST: "redis"
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    ports:
+      - "${MEILISEARCH_PORT}:${MEILISEARCH_PORT}"
+    environment:
+      MEILI_ENV: "development"
+    volumes:
+      - meili_data:/meili_data
+
+  funasr_interview:
+    image: registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-online-cpu-0.1.10
+    container_name: funasr_interview
+    ports:
+      - "${INTERVIEWER_PORT}:10095"
+    volumes:
+      - ./funasr-runtime-resources/models_interview:/workspace/models
+    privileged: true
+    stdin_open: true
+    tty: true
+
+  funasr_rookie:
+    image: registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-online-cpu-0.1.10
+    container_name: funasr_rookie
+    ports:
+      - "${ROOKIE_PORT}:10095"
+    volumes:
+      - ./funasr-runtime-resources/models_rookie:/workspace/models
+    privileged: true
+    stdin_open: true
+    tty: true
+
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - redis_data:/data
+    networks:
+      - redis_network
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  redis_data:
+    driver: local
+  meili_data:
+    driver: local
+
+networks:
+  redis_network:
+    driver: bridge

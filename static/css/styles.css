@@ -1,0 +1,173 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.chat-container {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.loading-animation {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    color: #666;
+    font-style: italic;
+}
+.message {
+    display: flex;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+}
+.message-content {
+    flex-grow: 1;
+    min-width: 0;
+}
+.role {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.message-text {
+    padding: 10px;
+    border-radius: 5px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+.markdown-body {
+    font-size: 14px;
+}
+.markdown-body p {
+    margin-bottom: 0.5em;
+}
+.markdown-body p:last-child {
+    margin-bottom: 0;
+}
+
+.chatgpt .avatar { background-color: #10a37f; }
+.chatgpt .message-text { background-color: #e7f7f4; }
+.rookie .avatar { background-color: #4a90e2; }
+.rookie .message-text { background-color: #e6f0fa; }
+.interviewer .avatar { background-color: #f5a623; }
+.interviewer .message-text { background-color: #fdf6e9; }
+
+@media (max-width: 600px) {
+    .chat-container {
+        margin: 10px;
+        padding: 10px;
+    }
+    .message {
+        flex-direction: column;
+    }
+    .avatar {
+        align-self: flex-start;
+        margin-bottom: 5px;
+    }
+    .message-content {
+        width: 100%;
+    }
+}
+
+.markdown-body pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.message {
+    transition: all 0.3s ease;
+}
+
+.message.new {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.message-text.typing::after {
+    content: '|';
+    animation: blink 0.7s infinite;
+}
+
+.loading-animation {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    color: #666;
+    font-style: italic;
+}
+
+.loading-animation::after {
+    content: '...';
+    display: inline-block;
+    animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+    100% { content: '.'; }
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: orange; }
+}
+
+.typewriter-effect {
+    display: inline-block;
+    white-space: pre-wrap;
+    border-right: 0.15em solid orange;
+    animation: typewriter 3s steps(40, end) 1s 1 normal both, blink-caret 0.75s step-end infinite;
+}

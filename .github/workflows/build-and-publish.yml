@@ -1,0 +1,58 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Docker Buildx
+        run: |
+          docker buildx create --use --name mybuilder
+          docker buildx inspect mybuilder --bootstrap
+
+      - name: Build and push Docker images
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --tag ghcr.io/$REPO_NAME/websocket_redis:latest \
+            --tag ghcr.io/$REPO_NAME/websocket_redis:${{ github.sha }} \
+            --push .
+
+      - name: Post Build Info
+        run: |
+          echo "🎉 Docker images for websocket_redis have been built and pushed successfully!"
+          echo "🖥️  Platforms: linux/amd64, linux/arm64, linux/arm/v7"
+          echo "📝  Tags:"
+          echo "     - ghcr.io/${{ github.repository }}/websocket_redis:latest"
+          echo "     - ghcr.io/${{ github.repository }}/websocket_redis:${{ github.sha }}"
+
+      - name: Print Docker version
+        run: docker version
