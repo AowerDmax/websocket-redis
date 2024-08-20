@@ -28,6 +28,12 @@ func main() {
 		Addr: fmt.Sprintf("%s:%d", cfg.RedisHost, cfg.RedisPort),
 	})
 
+	http.HandleFunc("/ws-config.js", func(w http.ResponseWriter, r *http.Request) {
+		js := fmt.Sprintf(`var socket = new WebSocket("ws://%s:%d/ws");`, cfg.WsHost, cfg.WsPort)
+		w.Header().Set("Content-Type", "application/javascript")
+		w.Write([]byte(js))
+	})
+
 	wsHandler := websocket.NewWebSocketHandler(rdb, cfg.DataQueueKeys, time.Duration(cfg.IntervalTime)*time.Millisecond)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

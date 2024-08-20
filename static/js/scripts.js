@@ -5,8 +5,6 @@ var lastRenderedIds = {
   interviewer: null,
 };
 
-var socket = new WebSocket("ws://localhost:8080/ws");
-
 function getInitials(name) {
   return name
     .split(" ")

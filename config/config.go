@@ -18,6 +18,8 @@ type Config struct {
 	MeiliSearchPort int
 	IntervalTime    int
 	DataQueueKeys   []string
+	WsHost          string
+	WsPort          int
 }
 
 func LoadConfig() *Config {
@@ -27,7 +29,7 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		GoAppHost:       getEnv("GO_APP_HOST", "127.0.0.1"),
+		GoAppHost:       getEnv("GO_APP_HOST", "0.0.0.0"),
 		GoAppPort:       getEnvAsInt("GO_APP_PORT", 8080),
 		RedisHost:       getEnv("REDIS_HOST", "127.0.0.1"),
 		RedisPort:       getEnvAsInt("REDIS_PORT", 6379),
@@ -35,6 +37,8 @@ func LoadConfig() *Config {
 		MeiliSearchPort: getEnvAsInt("MEILISEARCH_PORT", 7700),
 		IntervalTime:    getEnvAsInt("INTERVAL_TIME", 500),
 		DataQueueKeys:   getEnvAsStringSlice("DATA_QUEUE_KEYS", []string{"dialog_manager:chatgpt", "dialog_manager:interviewer", "dialog_manager:rookie"}),
+		WsHost:          getEnv("WS_HOST", "0.0.0.0"),
+		WsPort:          getEnvAsInt("WS_PORT", 8080),
 	}
 }
 
