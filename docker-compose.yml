@@ -8,11 +8,13 @@ services:
       - "${GO_APP_PORT}:8080"
     volumes:
       - ./data:/app/data
+      - ./.env:/app/.env
     depends_on:
       - meilisearch
       - redis
     env_file:
       - .env
+    restart: on-failure
     environment:
       MEILISEARCH_HOST: "meilisearch"
       MEILISEARCH_PORT: 7700

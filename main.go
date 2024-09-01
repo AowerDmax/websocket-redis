@@ -21,6 +21,7 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+		time.Sleep(20 * time.Second)
 		KnowledgeDatabase.ProcessExcel()
 	}()
 
@@ -38,7 +39,6 @@ func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/ws", wsHandler.ServeWS)
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
 	})
